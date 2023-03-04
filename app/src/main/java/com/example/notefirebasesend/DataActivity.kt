@@ -1,6 +1,7 @@
 package com.example.notefirebasesend
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -30,14 +31,17 @@ class DataActivity : AppCompatActivity() {
         var list = findViewById<ListView>(R.id.lView)
 
         btn.setOnClickListener() {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+
             var eText1 = title.text.toString()
             var eText2 = Des.text.toString()
             var eText3 = NOfLet.text.toString()
 
             val NoteDetails = hashMapOf(
-                "Note" to eText1,
-                "Description" to eText2,
-                "Limit" to eText3
+                "NoteTitle" to eText1,
+                "Description" to eText3,
+                "limitofLetters" to eText2
             )
 
 
@@ -50,7 +54,10 @@ class DataActivity : AppCompatActivity() {
                     Log.w("Faild", "Error adding document", e)
                 }
         }
-        }
+
+//        val intent = Intent(applicationContext, DataActivity::class.java)
+//        startActivity(intent)
+//        }
 
 //        val data = ArrayList<theNote>()
 //        val adapter = NoteAdapter(applicationContext,data)
@@ -82,4 +89,4 @@ class DataActivity : AppCompatActivity() {
 
 
 
-}
+}}

@@ -1,6 +1,7 @@
 package com.example.notefirebasesend
 
 import android.annotation.SuppressLint
+import android.content.ContentValues.TAG
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -16,6 +17,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -27,15 +29,31 @@ class MainActivity : AppCompatActivity() {
         val db = Firebase.firestore
 
         val addNotebtn = findViewById<FloatingActionButton>(R.id.addbtn)
-        var btn = findViewById<Button>(R.id.sendBtn)
-        var title = findViewById<EditText>(R.id.editText1)
-        var Des = findViewById<EditText>(R.id.editText2)
-        var NOfLet = findViewById<EditText>(R.id.editText3)
+        val listnote = ArrayList<theNote>()
+        val adapter = NoteAdapter(this,listnote)
+        lView.adapter = adapter
 
         addNotebtn.setOnClickListener() {
             val intent = Intent(this, DataActivity::class.java)
             startActivity(intent)
         }
+        db.collection("Notes")
+            .get()
+            .addOnSuccessListener { result ->
+                for (document in result) {
+                    Log.d(TAG, "${document.id} => ${document.data}")
+                    listnote.add(
+                        theNote(
+                            document.getString("NoteTitle").toString(),
+                            document.getString("Description").toString(),
+                            document.getString("limitofLetters").toString(),
+                    ))
+                    adapter.notifyDataSetChanged()
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.w(TAG, "Error getting documents.", exception)
+            }
 
     }
 }
